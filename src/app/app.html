@@ -5,6 +5,7 @@
 <textarea [(ngModel)]="texto" rows="8" cols="40"></textarea>
 <button (click)="analizar()">Analizar</button>
 <button (click)="probarSintactico()">Probar Sintaxis</button>
+<button (click)="ejecutar()">Ejecutar</button>
 <p>Texto ingresado: {{texto}}</p> 
 <table border="1">
 
@@ -55,3 +56,10 @@
 
 }
 </table>
+
+@if (resultadoEjecucion) {
+  <h3>Resultado de ejecución:</h3>
+  <pre>{{ resultadoEjecucion }}</pre>
+}
+
+<router-outlet></router-outlet>
