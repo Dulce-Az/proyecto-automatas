@@ -40,6 +40,7 @@ export class Parser {
                 / Right
                 / Graph
                 /Index
+                /ConsolePop
 
             Enqueue
                 = "ENQUEUE" _ "(" _ nombre:Identificador _ "," _ valor:Valor _ ")" _ ";" {
@@ -157,6 +158,13 @@ export class Parser {
             };
         }
 
+            ConsolePop
+                    = "console" __ "pop" _ "(" _ nombre:Identificador _ ")" _ ";" {
+                        return {
+                            tipo: "CONSOLE_POP",
+                            nombre: nombre
+                };
+        }
             Graph
                 = "GRAPH" _ "(" _ nombre:Identificador _ ")" _ ";" {
                 return {

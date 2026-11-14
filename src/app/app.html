@@ -88,4 +88,30 @@
   <pre>{{ resultadoEjecucion }}</pre>
 }
 
+
+
+@if (salidaConsola.length > 0) {
+  <h3>Valores eliminados:</h3>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Operación</th>
+        <th>Estructura</th>
+        <th>Valor eliminado</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (salida of salidaConsola; track $index) {
+        <tr>
+          <td>{{ salida.operacion }}</td>
+          <td>{{ salida.estructura }}</td>
+          <td>{{ salida.valor }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+
 <router-outlet></router-outlet>

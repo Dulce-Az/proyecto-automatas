@@ -27,6 +27,7 @@ export class App {
   arboles:any = {};
   arreglos:any = {};
   resultadoEjecucion: string = "";
+  salidaConsola: any[] = [];
   errorSintactico: any = null;
   
   constructor(private parser: Parser, private router: Router) {
@@ -89,6 +90,7 @@ const esperado = esperados?.includes(")")
     this.hashes = {};
     this.arboles = {};
     this.arreglos = {};
+    this.salidaConsola = [];
 
     for (const instruccion of instrucciones) {
 
@@ -117,6 +119,28 @@ const esperado = esperados?.includes(")")
 
           this.pilas[instruccion.nombre].pop();
           break;
+
+
+case "CONSOLE_POP": {
+  if (!this.pilas[instruccion.nombre]) {
+    throw new Error("La pila no ha sido declarada: " + instruccion.nombre);
+  }
+
+  if (this.pilas[instruccion.nombre].length === 0) {
+    throw new Error("La pila está vacía: " + instruccion.nombre);
+  }
+
+  const eliminado = this.pilas[instruccion.nombre].pop();
+
+  this.salidaConsola.push({
+    operacion: "console pop",
+    estructura: instruccion.nombre,
+    valor: eliminado
+  });
+
+  break;
+}
+
 
 
 case "QUEUE":
@@ -204,6 +228,10 @@ case "GET": {
 
 case "TREE":
   this.arboles[instruccion.nombre] = null;
+  break;
+
+case "ARRAY":
+  this.arreglos[instruccion.nombre] = [];
   break;
 
 case "ROOT": {
@@ -304,6 +332,16 @@ case "RIGHT": {
   break;
 }
 
+  case "INDEX": {
+    if (!this.arreglos[instruccion.nombre]=== undefined) {
+      throw new Error("El arreglo no ha sido declarado: " + instruccion.nombre);
+    }
+    const indice = instruccion.indice;
+
+    this.arreglos[instruccion.nombre][indice] = instruccion.valor;
+    break;
+  }
+
 
 
 case "GRAPH": {
@@ -351,6 +389,24 @@ case "GRAPH": {
     if (i != this.listas[nombre].length - 1) {
       codigoGraphviz += `n${i} -> n${i + 1};`;
       codigoGraphviz += `n${i + 1} -> n${i};`;
+    }
+  }
+
+
+} else if (this.arreglos[nombre]) {
+
+  codigoGraphviz = "rankdir=LR;";
+
+  for (let i = 0; i < this.arreglos[nombre].length; i++) {
+
+    const valor = String(this.arreglos[nombre][i])
+      .replace(/\\/g, "\\\\")
+      .replace(/"/g, '\\"');
+
+    codigoGraphviz += `n${i} [label="[${valor}]"];`;
+
+    if (i !== this.arreglos[nombre].length - 1) {
+      codigoGraphviz += `n${i} -> n${i + 1};`;
     }
   }
 
@@ -441,7 +497,7 @@ case "GRAPH": {
     }
 
     this.resultadoEjecucion = JSON.stringify({...this.pilas, ...this.colas,
-      ...this.listas, ...this.hashes, ...this.arboles}, null, 2);
+      ...this.listas, ...this.hashes, ...this.arboles, ...this.arreglos}, null, 2);
 
     alert("Programa ejecutado correctamente");
 
