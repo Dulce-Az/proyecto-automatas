@@ -26,29 +26,58 @@ export class App {
   hashes:any = {};
   arboles:any = {};
   resultadoEjecucion: string = "";
+  errorSintactico: any = null;
   
   constructor(private parser: Parser, private router: Router) {
   }
 
   probarSintactico(){
+      this.errorSintactico = null;
 
-  try {
+      try {
 
-    let resultado = this.parser.parse(this.texto);
+        let resultado = this.parser.parse(this.texto);
 
-    console.log("Resultado sintáctico:");
-    console.log(resultado);
+        console.log("Resultado sintáctico:");
+        console.log(resultado);
 
-    alert("Cadena válida");
+        alert("Cadena válida");
 
-  } catch (e:any) {
+        } catch (e:any) {
+        this.errorSintactico = e;
 
-    console.log("Error sintáctico:");
-    console.log(e);
+        console.log("Error sintáctico:");
+        console.log(e);
 
-    alert("Cadena inválida");
-  }
+            const inicio = e.location?.start;
+
+         const esperados = e.expected
+           ?.map((elemento: any) => elemento.text || elemento.description)
+          .filter((valor: any) =>
+          valor && !["//", "/*", "/", "*"].includes(valor)
+          )
+          .filter((valor: any, indice: number, arreglo: any[]) =>
+          arreglo.indexOf(valor) === indice
+          );
+
+const esperado = esperados?.includes(")")
+  ? ")"
+  : esperados?.join(" o ");
+
+       this.errorSintactico = {
+      linea: inicio?.line || "-",
+      columna: inicio?.column || "-",
+      encontrado: e.found === null ? "EOF" : e.found,
+      descripcion: esperado
+        ? "Se esperaba " + esperado
+        : e.message
+    };
+
+        alert("Cadena inválida");
+      }
     }
+
+
   ejecutar() {
   try {
     const instrucciones = this.parser.parse(this.texto);
@@ -521,19 +550,22 @@ case "GRAPH": {
             lexema  = c;
             estado = "ENTERO";
 
-          }else if(
-            codigo != 32 && codigo != 10 && codigo != 13 && codigo != 9
-          )/*{
-            let error = {
-              simbolo: caracter, 
-              fila: fila,
-              columna: columna,
-              descripcion: "Simbolo no reconocido"
-            
-            this.errores.push(error);
-            console.log(error);
-          }*/
-          break;
+         
+} else if (
+  codigo != 32 && codigo != 10 && codigo != 13 && codigo != 9
+) {
+  let error = {
+    simbolo: caracter,
+    fila: fila,
+    columna: columna,
+    descripcion: "Simbolo no reconocido"
+  };
+
+  this.errores.push(error);
+  console.log(error);
+}
+break;
+
         }
         break;
         
@@ -614,17 +646,34 @@ case "GRAPH": {
                   );  
                   this.tokens.push(token);
                   console.log(token);
-                }else if (codigo == 44) { //,
-                  token = this.llenarTokens(
-                    ",", fila,
-                    columna,
-                    "Simbolo"
-                  );  
-                  this.tokens.push(token);
-                  console.log(token);
-                }
-                lexema = "";
-                estado = "A";
+                
+}else if (codigo == 44) { //,
+  token = this.llenarTokens(
+    ",", fila,
+    columna,
+    "Simbolo"
+  );
+  this.tokens.push(token);
+  console.log(token);
+
+}else if (
+  codigo != 32 && codigo != 10 &&
+  codigo != 13 && codigo != 9
+) {
+  let error = {
+    simbolo: caracter,
+    fila: fila,
+    columna: columna,
+    descripcion: "Simbolo no reconocido"
+  };
+
+  this.errores.push(error);
+  console.log(error);
+}
+
+lexema = "";
+estado = "A";
+
               }
               break;
 
@@ -752,7 +801,7 @@ case "GRAPH": {
   obtenerColor(tipo:string){
 
   if(tipo == "Palabra Reservada"){
-    return "#00FFFF"
+    return "darkblue";
   }
 
   if(tipo == "Identificador"){

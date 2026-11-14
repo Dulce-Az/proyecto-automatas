@@ -57,6 +57,32 @@
 }
 </table>
 
+
+@if (errorSintactico) {
+  <h3>Errores Sintácticos</h3>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Descripción</th>
+        <th>Encontrado</th>
+        <th>Fila</th>
+        <th>Columna</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>{{ errorSintactico.descripcion }}</td>
+        <td>{{ errorSintactico.encontrado }}</td>
+        <td>{{ errorSintactico.linea }}</td>
+        <td>{{ errorSintactico.columna }}</td>
+      </tr>
+    </tbody>
+  </table>
+}
+
+
 @if (resultadoEjecucion) {
   <h3>Resultado de ejecución:</h3>
   <pre>{{ resultadoEjecucion }}</pre>
