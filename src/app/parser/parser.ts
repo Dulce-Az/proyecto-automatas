@@ -39,6 +39,7 @@ export class Parser {
                 / Left
                 / Right
                 / Graph
+                /Index
 
             Enqueue
                 = "ENQUEUE" _ "(" _ nombre:Identificador _ "," _ valor:Valor _ ")" _ ";" {
@@ -137,6 +138,7 @@ export class Parser {
             / "LIST"
             / "HASH"
             / "TREE"
+            / "ARRAY"
 
             Push
                 = "PUSH" _ "(" _ nombre:Identificador _ "," _ valor:Valor _ ")" _ ";" {
@@ -162,6 +164,15 @@ export class Parser {
                 nombre: nombre
             };
         }
+            Index
+                = "INDEX" _ "(" _ nombre:Identificador _ "," _ indice:Numero _ "," _ valor:Valor _ ")" _ ";" {
+                return {
+                tipo: "INDEX",
+                nombre: nombre,
+                indice: indice,
+                valor: valor
+            };
+        }
 
         Valor
             = Cadena
@@ -173,8 +184,11 @@ export class Parser {
         }
 
         Cadena
-            = ["] contenido:[^"]* ["] {
-      return contenido.join("");
+            = '"' contenido:[^"]* '"' {
+             return contenido.join("");
+        }
+            / "'" contenido:[^']* "'" {
+             return contenido.join("");
         }
 
       Identificador

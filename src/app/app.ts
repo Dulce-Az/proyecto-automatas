@@ -17,7 +17,7 @@ export class App {
   palabrasReservadas = new Set([
     "STACK", "QUEUE", "LIST", "HASH", "TREE", "PUSH", "POP", "ENQUEUE",
     "DEQUEUE", "INSERT", "REMOVE", "SET","GET", "ADDNODE", "ROOT", 
-    "LEFT", "RIGHT", "PRINT", "GRAPH", "NUMERO", "TEXTO"
+    "LEFT", "RIGHT", "PRINT", "GRAPH", "NUMERO", "TEXTO", "ARRAY", "INDEX"
   ]);
   errores:any = [];
   pilas:any = {};
@@ -25,6 +25,7 @@ export class App {
   listas:any = {};
   hashes:any = {};
   arboles:any = {};
+  arreglos:any = {};
   resultadoEjecucion: string = "";
   errorSintactico: any = null;
   
@@ -87,6 +88,7 @@ const esperado = esperados?.includes(")")
     this.listas = {};
     this.hashes = {};
     this.arboles = {};
+    this.arreglos = {};
 
     for (const instruccion of instrucciones) {
 
