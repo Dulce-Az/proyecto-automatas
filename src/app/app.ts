@@ -351,13 +351,17 @@ case "GRAPH": {
 
   if (this.pilas[nombre]) {
 
-    for (let i = 0; i < this.pilas[nombre].length; i++) {
-      codigoGraphviz += this.pilas[nombre][i];
+if (this.pilas[nombre]) {
 
-      if (i != this.pilas[nombre].length - 1) {
-        codigoGraphviz += "->";
-      }
+  for (let i = this.pilas[nombre].length - 1; i >= 0; i--) {
+    codigoGraphviz += this.pilas[nombre][i];
+
+    if (i != 0) {
+      codigoGraphviz += "->";
     }
+  }
+
+}
 
   } else if (this.colas[nombre]) {
 
@@ -565,11 +569,11 @@ case "GRAPH": {
           console.log(token);
           break;
 
-        case 62: // =
+        case 61: // =
           token = this.llenarTokens(
-            "=>", fila,  
+            "=", fila,  
           columna,
-          "ASIGNACION"
+          "Simbolo"
           );
           this.tokens.push(token);
           console.log(token);
@@ -587,6 +591,7 @@ case "GRAPH": {
           break;
           
         case 34: // "
+        case 39: // '
         lexema = caracter;
         estado = "CADENA";
         break;
@@ -715,6 +720,15 @@ break;
   this.tokens.push(token);
   console.log(token);
 
+  }else if (codigo == 61) { // =
+  token = this.llenarTokens(
+    "=", fila,
+    columna,
+    "Simbolo"
+  );
+  this.tokens.push(token);
+  console.log(token);
+
 }else if (
   codigo != 32 && codigo != 10 &&
   codigo != 13 && codigo != 9
@@ -738,7 +752,7 @@ estado = "A";
 
             case "CADENA":
               
-              if(codigo == 34){ // "
+              if(caracter === lexema.charAt(0)){ // "
                 lexema = lexema + caracter;
 
                 token = this.llenarTokens(
