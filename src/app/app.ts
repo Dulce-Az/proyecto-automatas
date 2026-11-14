@@ -17,7 +17,8 @@ export class App {
   palabrasReservadas = new Set([
     "STACK", "QUEUE", "LIST", "HASH", "TREE", "PUSH", "POP", "ENQUEUE",
     "DEQUEUE", "INSERT", "REMOVE", "SET","GET", "ADDNODE", "ROOT", 
-    "LEFT", "RIGHT", "PRINT", "GRAPH", "NUMERO", "TEXTO", "ARRAY", "INDEX"
+    "LEFT", "RIGHT", "PRINT", "GRAPH", "NUMERO", "TEXTO", "ARRAY", "INDEX",
+    "console", "pop"
   ]);
   errores:any = [];
   pilas:any = {};
@@ -333,7 +334,7 @@ case "RIGHT": {
 }
 
   case "INDEX": {
-    if (!this.arreglos[instruccion.nombre]=== undefined) {
+    if (this.arreglos[instruccion.nombre]=== undefined) {
       throw new Error("El arreglo no ha sido declarado: " + instruccion.nombre);
     }
     const indice = instruccion.indice;
